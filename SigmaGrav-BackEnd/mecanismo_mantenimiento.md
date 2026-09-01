@@ -114,3 +114,36 @@ La siguiente tabla resume la definición física del archivado para cada modelo 
 | `App\Models\facturas` | `created_at` | Ninguna |
 | `App\Models\remitos` | `created_at` | Ninguna |
 | `App\Models\PagosRealizados` | `created_at` | Ninguna |
+
+---
+
+## 4. Resumen de Tablas en Mantenimiento
+
+A continuación se detalla el listado completo de las **21 tablas** involucradas en el proceso de mantenimiento y archivado (`db:archive`), indicando su nombre de tabla en la base de datos, el modelo de Laravel correspondiente y si la tabla se traspasa/archiva por relación con un modelo padre o de manera independiente/directa:
+
+| Tabla en BD | Modelo Laravel | Traspaso por Relación | Detalle / Origen de Relación |
+| :--- | :--- | :---: | :--- |
+| `transacciones` | `App\Models\Transacciones` | **No** (Padre) | Modelo principal. Dispara el archivado en cascada de sus relaciones. |
+| `pagos_gastos` | `App\Models\PagosGastos` | **No** (Padre) | Modelo principal. Dispara el archivado en cascada de sus detalles. |
+| `facturas` | `App\Models\facturas` | **Sí** / Directo | Se traspasa por relación con `transacciones`. También se procesa directo para huérfanos. |
+| `remitos` | `App\Models\remitos` | **Sí** / Directo | Se traspasa por relación con `transacciones`. También se procesa directo para huérfanos. |
+| `trazaproductos` | `App\Models\trazaproductos` | **Sí** / Directo | Se traspasa por relación con `transacciones`. También se procesa de forma independiente. |
+| `pagos` (o `pagos_realizados`) | `App\Models\PagosRealizados` | **Sí** / Directo | Se traspasa por relación con `pagos_gastos`. También se procesa directo para huérfanos. |
+| `cierresturnos` | `App\Models\cierresturnos` | **No** | Proceso directo / independiente. |
+| `justificaciones` | `App\Models\AsistenciaJustificacion` | **No** | Proceso directo / independiente. |
+| `cargas` | `App\Models\cargas` | **No** | Proceso directo / independiente. |
+| `cobros` | `App\Models\Cobros` | **No** | Proceso directo / independiente. |
+| `fichadas` | `App\Models\Fichada` | **No** | Proceso directo / independiente. |
+| `fidelizacion_movimientos` | `App\Models\fidelizacion_movimientos` | **No** | Proceso directo / independiente. |
+| `notacreditos` | `App\Models\NotaCredito` | **No** | Proceso directo / independiente. |
+| `notadebitos` | `App\Models\NotaDebito` | **No** | Proceso directo / independiente. |
+| `purgas` | `App\Models\purgas` | **No** | Proceso directo / independiente. |
+| `runner_executions` | `App\Models\RunnerExecution` | **No** | Proceso directo / independiente. |
+| `sueldos_adelantos` | `App\Models\SueldosAdelantos` | **No** | Proceso directo / independiente. |
+| `sueldos_liquidaciones` | `App\Models\SueldosLiquidaciones` | **No** | Proceso directo / independiente. |
+| `tanques_mov` | `App\Models\tanques_mov` | **No** | Proceso directo / independiente. |
+| `tiradasalbuzon` | `App\Models\tiradasalbuzon` | **No** | Proceso directo / independiente. |
+| `vacaciones` | `App\Models\Vacacion` | **No** | Proceso directo / independiente. |
+
+> [!NOTE]
+> Las tablas `facturas`, `remitos`, `trazaproductos` y `pagos` tienen un mecanismo híbrido: son archivadas automáticamente por **relación** cuando se archiva su registro padre (`transacciones` o `pagos_gastos`), pero además cuentan con un paso de ejecución independiente para archivar posibles registros **huérfanos** que hayan quedado sin padre asociado.
