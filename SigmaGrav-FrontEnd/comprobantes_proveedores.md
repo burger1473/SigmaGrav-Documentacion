@@ -119,12 +119,14 @@ Al confirmar el formulario, se ejecutan las siguientes acciones en secuencia:
    * **Actualización de Stock**: Incrementa la cantidad en la tabla `stockproductos` para esa combinación de `productos_id + modulo + sector`.
    * **Registro de Traza**: Inserta una fila en `trazaproductos` registrando el movimiento de ingreso, stock previo, stock posterior, usuario interviniente y la referencia al comprobante de proveedor.
 
-#### C. Reporte PDF de Movimientos
-Una vez finalizado el guardado, el sistema pregunta al usuario si desea emitir el reporte PDF. De ser afirmativo, invoca a `ReporteComprobanteMovimiento` en `GenerarPDF.jsx`, generando un documento impreso con el detalle del ingreso:
-* SKU y Nombre del Producto.
-* Ubicación de destino (`Estación - Módulo Sector`).
-* Cantidad Ingresada.
-* Stock Anterior vs. Stock Actual Resultante.
+#### C. Auditoría en Historial de Ejecuciones y Reporte PDF de Movimientos
+1. **Auditoría de Registro Masivo (`ejecucion_mov_prod`)**:
+   - Cada proceso de ingreso de mercadería por comprobante genera una traza de auditoría en `ejecucion_mov_prod` con el tipo `comprobante_proveedor` (*Ingreso Proveedor*).
+   - El proceso audita en tiempo real el resultado de cada estación/producto (`exito`, `parcial`, `error`).
+   - Permite consultar y re-intentar ingresos fallidos desde la pestaña **Historial de Ejecuciones** filtrando por Tipo `comprobante_proveedor` o por rango de **Fecha y Hora**.
+2. **Generación de Comprobante PDF**:
+   - Tras el guardado o desde el **Historial de Ejecuciones**, se puede emitir el documento PDF oficial titulado **"Ejecucion Ingreso Comprobante Proveedor"**.
+   - El PDF exhibe la fecha/hora exacta de ejecución original (`created_at`), el operador interviniente (Nombre y Apellido) y el desglose de ítems ingresados con su Stock Anterior y Stock Actual resultante.
 
 ---
 
@@ -135,3 +137,4 @@ Cuando se abre un comprobante en modo **Edición**:
 * Se habilita la edición de campos de encabezado (Fechas, Importes, Estado, Observación).
 * Al guardar cambios, la API compara el objeto original con el modificado y guarda una traza en la columna `historial_modificaciones` con la fecha, usuario y campos alterados.
 * La interfaz UI resalta visualmente en color amarillo (`#fff3cd`) aquellos campos que hayan sido modificados históricamente.
+

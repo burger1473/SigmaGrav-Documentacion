@@ -114,7 +114,10 @@ Si el comando corre directamente en la estación central, invoca la lógica de n
 
 1. **Obtención / Alta Externa de Tarjeta**:
    * Consulta la tarjeta en `fidelizacion_tarjetas`.
-   * Si no existe localmente, consulta la API de MAWI (`APImawionlygetdata`). Si existe en MAWI, registra automáticamente el cliente y la tarjeta en el servidor central.
+   * Si no existe localmente, consulta la API de MAWI (`APImawionlygetdata`). Si la tarjeta existe en MAWI, registra automáticamente la tarjeta y el cliente en el servidor central:
+     * Si MAWI provee CUIT, utiliza dicho CUIT.
+     * Si no trae CUIT pero sí DNI, busca por DNI en la base local o realiza la resolución vía ARCA/AFIP (o genera CUIT sintético `00DNI0`).
+     * Si no trae ni CUIT ni DNI, asigna directamente el CUIT por defecto `'000000000'` (asociándolo al cliente existente en la base de datos) sin consultar ARCA.
 2. **Sincronización y Registro de Consumos M3**:
    * Compara los M3 Anticipados y Regalo devueltos por la API de MAWI con la base local.
    * Si detecta consumos o inconsistencias, genera un movimiento de trazabilidad en `fidelizacion_movimientos` (tipo `CONSUMO` o `ERROR_SINCRONIZACION`) y retorna en la respuesta los deltas consumidos (`m3ant` y `m3reg`).

@@ -164,3 +164,10 @@ stateDiagram-v2
 | **Config.jsx** | `obtenerCargasPorMangueras` | `POST /api/v1/obtener-cargas-por-mangueras/` (Local) | Obtiene cargas directamente del concentrador local en Modo Fallo. |
 | **ApiService.jsx** | `getHosesSecondary` | Algoritmo Multinegocio | Distribuye la consulta entre concentradores locales no dependientes. |
 | **ConnectionBlocker.jsx** | `checkStatus` | `GET /public/system-status` | Polling constante de conectividad para detectar Modo Fallo/Nominal. |
+
+---
+
+## 6. Documentación Adicional
+
+* [Configuración de Fidelización y Tickets Custom (`FIDELIZACION_CONFIGS.md`)](file:///home/burger/workspace/repos/SigmaGrav/SigmaGrav-Documentacion/SigmaGrav-PosApp/FIDELIZACION_CONFIGS.md): Especificación detallada de la tabla `fidelizacion_configs`, tipos de reglas (`PUNTOS`, `DESCUENTO`, `TIMEOUT`, `ANTIFRAUDE`, `TICKET`) y el proceso de armado/encriptación de tickets personalizados.
+
